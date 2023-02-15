@@ -10,38 +10,68 @@ echo "5. Quit"
 
 read -p "Enter your choice (1-5): " choice
 
-if [ $choice -eq 1 ]; then
-echo "Running Default Nmap Scan"
-read -p "Enter the target host: " target_host
-nmap $target_host
-elif [ $choice -eq 2 ]; then
-echo "Running Nmap OS Detection Scan"
-read -p "Enter the target host: " target_host
-nmap -O $target_host
-elif [ $choice -eq 3 ]; then
-echo "Running Nmap Version Detection Scan"
-read -p "Enter the target host: " target_host
-nmap -sV $target_host
-elif [ $choice -eq 4 ]; then
-echo "Running Nmap Script Scan"
-read -p "Enter the target host: " target_host
-echo "Please choose a NSE script (1-5): "
-echo "1. http-title"
-echo "2. smb-os-discovery"
-echo "3. ftp-anon"
-echo "4. ssh-hostkey"
-echo "5. dns-zone-transfer"
-read -p "Enter your choice (1-5): " script
-case $script in
-1) nmap --script=http-title $target_host;;
-2) nmap --script=smb-os-discovery $target_host;;
-3) nmap --script=ftp-anon $target_host;;
-4) nmap --script=ssh-hostkey $target_host;;
-5) nmap --script=dns-zone-transfer $target_host;;
-*) echo "Invalid input, please choose a value between 1 and 5"
-esac
-elif [ $choice -eq 5 ]; then
-echo "Quitting"
-else
-echo "Invalid input, please choose a value between 1 and 5"
+if ! [[ $choice =~ ^[1-5]$ ]]; then
+  echo "Invalid input, please choose a value between 1 and 5"
+  exit 1
 fi
+
+case $choice in
+  1) 
+    echo "Running Default Nmap Scan"
+    read -p "Enter the target host: " target_host
+    if ! [[ $target_host =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+      echo "Invalid target host, please enter a valid IP address"
+      exit 1
+    fi
+    nmap $target_host
+    ;;
+  2) 
+    echo "Running Nmap OS Detection Scan"
+    read -p "Enter the target host: " target_host
+    if ! [[ $target_host =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+      echo "Invalid target host, please enter a valid IP address"
+      exit 1
+    fi
+    nmap -O $target_host
+    ;;
+  3) 
+    echo "Running Nmap Version Detection Scan"
+    read -p "Enter the target host: " target_host
+    if ! [[ $target_host =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+      echo "Invalid target host, please enter a valid IP address"
+      exit 1
+    fi
+    nmap -sV $target_host
+    ;;
+  4) 
+    echo "Running Nmap Script Scan"
+    read -p "Enter the target host: " target_host
+    if ! [[ $target_host =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+      echo "Invalid target host, please enter a valid IP address"
+      exit 1
+    fi
+    echo "Please choose a NSE script (1-5): "
+    echo "1. http-title"
+    echo "2. smb-os-discovery"
+    echo "3. ftp-anon"
+    echo "4. ssh-hostkey"
+    echo "5. dns-zone-transfer"
+    read -p "Enter your choice (1-5): " script
+    if ! [[ $script =~ ^[1-5]$ ]]; then
+      echo "Invalid script choice, please choose a value between 1 and 5"
+      exit 1
+    fi
+    case $script in
+      1) nmap --script=http-title $target_host;;
+      2) nmap --script=smb-os-discovery $target_host;;
+      3) nmap --script=ftp-anon $target_host;;
+      4) nmap --script=ssh-hostkey $target_host;;
+      5) nmap --script=dns-zone-transfer $target_host;;
+    esac
+    ;;
+  5) 
+    echo "Quitting"
+    exit 0
+    ;;
+esac
+
