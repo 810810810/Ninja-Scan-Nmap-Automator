@@ -9,7 +9,7 @@ echo "3. Version Detection"
 echo "4. Script Scan"
 echo "5. Quit"
 
-read -p "Enter the number of the option you want to use: " choice
+read -r -p "Enter the number of the option you want to use: " choice
 echo "-----------------------------------------------"
 
 if ! [[ $choice =~ ^[1-5]$ ]]; then
@@ -20,40 +20,40 @@ fi
 case $choice in
   1)
     echo "You selected a Default Scan."
-    read -p "Please enter the target host IP address: " target_host
+    read -r -p "Please enter the target host IP address: " target_host
     echo "-----------------------------------------------"
     if ! [[ $target_host =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
       echo "Invalid input, please enter a valid IP address"
       exit 1
     fi
     echo "Running Nmap Default Scan on target host $target_host..."
-    nmap $target_host
+    nmap "$target_host"
     ;;
   2)
     echo "You selected OS Detection."
-    read -p "Please enter the target host IP address: " target_host
+    read -r -p "Please enter the target host IP address: " target_host
     echo "-----------------------------------------------"
     if ! [[ $target_host =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
       echo "Invalid input, please enter a valid IP address"
       exit 1
     fi
     echo "Running Nmap OS Detection Scan on target host $target_host..."
-    nmap -O $target_host
+    nmap -O "$target_host"
     ;;
   3)
     echo "You selected Version Detection."
-    read -p "Please enter the target host IP address: " target_host
+    read -r -p "Please enter the target host IP address: " target_host
     echo "-----------------------------------------------"
     if ! [[ $target_host =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
       echo "Invalid input, please enter a valid IP address"
       exit 1
     fi
     echo "Running Nmap Version Detection Scan on target host $target_host..."
-    nmap -sV $target_host
+    nmap -sV "$target_host"
     ;;
   4)
     echo "You selected Script Scan."
-    read -p "Please enter the target host IP address: " target_host
+    read -r -p "Please enter the target host IP address: " target_host
     echo "-----------------------------------------------"
     if ! [[ $target_host =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
       echo "Invalid input, please enter a valid IP address"
@@ -65,7 +65,7 @@ case $choice in
     echo "3. ftp-anon"
     echo "4. ssh-hostkey"
     echo "5. dns-zone-transfer"
-    read -p "Enter the number of the script you want to use: " script
+    read -r -p "Enter the number of the script you want to use: " script
     echo "-----------------------------------------------"
     if ! [[ $script =~ ^[1-5]$ ]]; then
       echo "Invalid input, please enter a number between 1 and 5"
@@ -73,27 +73,21 @@ case $choice in
     fi
     case $script in
       1) echo "Running Nmap Script Scan with http-title on target host $target_host..."
-         nmap --script=http-title $target_host;;
-      2) echo "Running Nmap Script Scan with smb-os-discovery on target host $target_host
-case $script in
-  1) 
-    echo "Running Nmap Script Scan with http-title on target host $target_host"
-    nmap --script=http-title $target_host
-    ;;
-  2) 
-    echo "Running Nmap Script Scan with smb-os-discovery on target host $target_host"
-    nmap --script=smb-os-discovery $target_host
-    ;;
-  3) 
-    echo "Running Nmap Script Scan with ftp-anon on target host $target_host"
-    nmap --script=ftp-anon $target_host
-    ;;
-  4) 
-    echo "Running Nmap Script Scan with ssh-hostkey on target host $target_host"
-    nmap --script=ssh-hostkey $target_host
-    ;;
-  5) 
-    echo "Running Nmap Script Scan with dns-zone-transfer on target host $target_host"
-    nmap --script=dns-zone-transfer $target_host
-    ;;
+         nmap --script=http-title "$target_host";;
+      2) echo "Running Nmap Script Scan with smb-os-discovery on target host $target_host..."
+nmap --script=smb-os-discovery "$target_host";;
+3) echo "Running Nmap Script Scan with ftp-anon on target host $target_host..."
+nmap --script=ftp-anon "$target_host";;
+4) echo "Running Nmap Script Scan with ssh-hostkey on target host $target_host..."
+nmap --script=ssh-hostkey "$target_host";;
+5) echo "Running Nmap Script Scan with dns-zone-transfer on target host $target_host..."
+nmap --script=dns-zone-transfer "$target_host";;
+*) echo "Invalid input, please enter a number between 1 and 5"
+exit 1;;
+esac
+;;
+5)
+echo "Exiting the Nmap Vulnerability Assessment Tool. Thank you for using it!"
+exit 0
+;;
 esac
